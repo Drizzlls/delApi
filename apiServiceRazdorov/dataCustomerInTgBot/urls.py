@@ -1,6 +1,9 @@
 from django.urls import path, include
-from .views import TaskAPIView
+from .views import GetCurrentClient, NewClient, GetClient
 
 urlpatterns = [
-    path('', TaskAPIView.as_view()),
+    path('', GetCurrentClient.as_view()),
+    path('new-client', NewClient.as_view()),
+    path('get-client/', GetClient.as_view()),
+
 ]
