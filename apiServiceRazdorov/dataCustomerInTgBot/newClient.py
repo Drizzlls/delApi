@@ -6,7 +6,7 @@ import time
 
 
 class AddNewClient:
-    def __init__(self, nickname, chatId, phone, idGroup):
+    def __init__(self, nickname, chatId, phone, idGroup, last_name, first_name):
         self.nickname = nickname
         self.chatId = chatId
         self.phone = phone
@@ -14,6 +14,8 @@ class AddNewClient:
         self.allUserInGroup = self.allUserInGroup()
         self.link = ''
         self.idManager = ''
+        self.last_name = last_name
+        self.first_name = first_name
 
     def findNickname(self):
         """ Осуществляем поиск по никнейму """
@@ -69,7 +71,9 @@ class AddNewClient:
             "PHONE": [{"VALUE": self.phone, "VALUE_TYPE": "WORK"}],
             "UF_CRM_1673529241" : self.nickname,
             "UF_CRM_1673599207": self.chatId,
-            "ASSIGNED_BY_ID" : self.idManager
+            "ASSIGNED_BY_ID" : self.idManager,
+            "NAME": self.first_name,
+            "LAST_NAME" : self.last_name
         })
         return True
 

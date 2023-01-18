@@ -22,7 +22,12 @@ class NewClient(APIView):
     def post(self, request):
         serializer = DataNewClietnBotSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        data = AddNewClient(phone=request.data['phone'],nickname=request.data['nickname'],chatId=request.data['chatId'],idGroup=request.data['idGroup'])
+        data = AddNewClient(phone=request.data['phone'],
+                            nickname=request.data['nickname'],
+                            chatId=request.data['chatId'],
+                            idGroup=request.data['idGroup'],
+                            last_name=request.data["last_name"],
+                            first_name=request.data["first_name"])
         data()
         return Response(data.link)
 
