@@ -1,5 +1,4 @@
 import pprint
-
 from bitrixTask.classBitrix import Bitrix24DataTgBot as Bitrix24Data
 from .currentСlient import CurrentClient
 import time

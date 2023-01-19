@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from .bitrixMethods import updateDataBitrix
 from .newClient import AddNewClient
 from .getClient import GetClientClass
+from datetime import date
 
 class GetCurrentClient(APIView):
     def post(self, request):
@@ -13,7 +14,7 @@ class GetCurrentClient(APIView):
         data = CurrentClient(idDeal=request.data['idDeal'],idManager=request.data['idManager'],nickname=request.data['nickname'],chatId=request.data['chatId'])
         link = data.getLinkTelegramManager()
         if link.find('t.me') != -1:
-            updateBitrix = updateDataBitrix(id=request.data['idDeal'], nickname=request.data['nickname'], chatId=request.data['chatId'])
+            updateBitrix = updateDataBitrix(id=request.data['idDeal'], nickname=request.data['nickname'], chatId=request.data['chatId'], date=date.today())
             updateBitrix()
         return Response(link)
 
@@ -36,5 +37,5 @@ class GetClient(APIView):
     def post(self, request):
         serializer = GetClietnBotSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        client = GetClientClass(nick=request.data)
+        client = GetClientClass(nickname=request.data['nickname'])
         return Response(client.defineEntity())
