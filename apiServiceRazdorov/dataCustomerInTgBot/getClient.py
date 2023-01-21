@@ -1,5 +1,6 @@
 from bitrixTask.classBitrix import Bitrix24DataTgBot as Bitrix24Data
 import pprint
+from .models import AllManagers, SourceDeal, SourceLead
 
 """
 1) ФИО
@@ -20,34 +21,23 @@ class GetClientClass:
     def defineEntity(self):
         deal = Bitrix24Data.B.callMethod('crm.deal.list',filter={"UF_CRM_1671012335": self.nickname}, select=['CONTACT_ID','ASSIGNED_BY_ID','UF_CRM_62DAB2BE1B9C0','UF_CRM_6059A855ED8BE','UF_CRM_5F3BE0484AC8C','STAGE_ID','UF_CRM_1671012335','CATEGORY_ID'])
         if deal != []:
-            return self.getDeal(deal)
-        getLead = Bitrix24Data.B.callMethod('crm.lead.list',filter={"UF_CRM_1673529241": self.nickname})
-        if getLead != []:
-            return {"lead": getLead}
+            return self.getDeal(deal),
+        lead = Bitrix24Data.B.callMethod('crm.lead.list',filter={"UF_CRM_1673529241": self.nickname},select=['ID','ASSIGNED_BY_ID','UF_CRM_1597759307071','NAME','LAST_NAME','SECOND_NAME'])
+        if lead != []:
+            return self.getLead(lead)
         return 'Такого никнейма нет в Битриксе'
 
-    # def getData(self):
-    #     data = self.defineEntity()
-    #     if isinstance(data[0], list):
-    #         if data.get('deal', False):
-    #             print('Я в сделке')
-    #             deal = self.getDeal(data)
-    #             return deal
-    #         elif data.get('lead', False):
-    #             lead = self.getLead(data)
-    #             return lead
-    #     return 'Такого никнейма нет в Битриксе (getData)'
 
-
-    # def getLead(self,data):
-    #     """ Получаем лид """
-    #     return {'ID': data[0]['ID'],
-    #             'ASSIGNED_BY_ID': data[0]['ASSIGNED_BY_ID'],
-    #             'Source': data[0]['UF_CRM_5F3BE0484AC8C'],
-    #             'Name': data[0]['NAME'],
-    #             'Last_Name': contact['LAST_NAME'],
-    #             'Second_name': contact['SECOND_NAME'],
-    #             'Type': 'Лид'}
+    def getLead(self,data):
+        """ Получаем лид """
+        return {'ID': data[0]['ID'],
+                'ASSIGNED_BY_ID': self.getManager(data[0]['ASSIGNED_BY_ID']),
+                'Source': self.getSource(data[0]['UF_CRM_1597759307071'],entity='lead'),
+                'Name': data[0]['NAME'],
+                'Last_Name': data[0]['LAST_NAME'],
+                'Second_name': data[0]['SECOND_NAME'],
+                'Type': 'Лид',
+                'Group':self.getGroup(id=data[0]['ASSIGNED_BY_ID'])}
 
     def getDeal(self, data):
         """ Получаем сделку """
@@ -60,14 +50,15 @@ class GetClientClass:
                     data.remove(deal)
         contact = self.getContact(data[0]['CONTACT_ID'])
         return {'ID': data[0]['ID'],
-                'ASSIGNED_BY_ID': data[0]['ASSIGNED_BY_ID'],
+                'ASSIGNED_BY_ID': self.getManager(data[0]['ASSIGNED_BY_ID']),
                 'Date':data[0]['UF_CRM_62DAB2BE1B9C0'][:-15] if data[0]['UF_CRM_62DAB2BE1B9C0'] else 'Нет',
                 'Number':data[0]['UF_CRM_6059A855ED8BE'] if data[0]['UF_CRM_6059A855ED8BE'] else 'Нет',
-                'Source': data[0]['UF_CRM_5F3BE0484AC8C'],
+                'Source': self.getSource(id=data[0]['UF_CRM_5F3BE0484AC8C'],entity='deal'),
                 'Name':contact['NAME'],
                 'Last_Name':contact['LAST_NAME'],
                 'Second_name':contact['SECOND_NAME'],
-                'Type': 'Сделка'}
+                'Type': 'Сделка',
+                'Group': self.getGroup(data[0]['ASSIGNED_BY_ID'])}
 
 
     def getContact(self, id):
@@ -75,3 +66,39 @@ class GetClientClass:
         return {'NAME': contact['NAME'] if contact['NAME'] else '',
                 'LAST_NAME':contact['LAST_NAME'] if contact['LAST_NAME'] else '',
                 'SECOND_NAME':contact['SECOND_NAME'] if contact['SECOND_NAME'] else ''}
+
+    def getManager(self,id):
+        try:
+            manager = AllManagers.objects.get(idManager=id).name
+            return manager
+        except:
+            return id
+
+    def getSource(self,id,entity):
+        if entity == 'lead':
+            try:
+                source = SourceLead.objects.get(idFromBitrix=id).title
+                return source
+            except:
+                return id
+        else:
+            try:
+                source = SourceDeal.objects.get(idFromBitrix=id).title
+                return source
+            except:
+                return id
+
+    def getGroup(self,id):
+        departamentManager = Bitrix24Data.B.callMethod('user.get', id=id)
+        dictGroup = {
+            80: 'Группа Филиной',
+            82: 'Группа Власенко',
+            84: 'Группа Саркисян',
+            88: 'Группа Арсеньева',
+            90: 'Группа Шмелева'
+        }
+        for group in departamentManager[0]['UF_DEPARTMENT']:
+            if group in dictGroup.keys():
+                return dictGroup[group]
+        return 'Сотрудник вне рабочей группы'
+

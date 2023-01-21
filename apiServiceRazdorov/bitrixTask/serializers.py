@@ -13,3 +13,7 @@ class TgBotDataSerializer(serializers.Serializer):
     category = serializers.IntegerField()
     message = serializers.CharField()
     nickname = serializers.CharField()
+
+
+class TgBotGetUserSerializer(serializers.Serializer):
+    nickname = serializers.CharField()
