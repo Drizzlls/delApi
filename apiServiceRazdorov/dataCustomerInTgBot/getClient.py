@@ -31,13 +31,13 @@ class GetClientClass:
     def getLead(self,data):
         """ Получаем лид """
         return {'ID': data[0]['ID'],
-                'ASSIGNED_BY_ID': self.getManager(data[0]['ASSIGNED_BY_ID']),
-                'Source': self.getSource(data[0]['UF_CRM_1597759307071'],entity='lead'),
-                'Name': data[0]['NAME'],
-                'Last_Name': data[0]['LAST_NAME'],
-                'Second_name': data[0]['SECOND_NAME'],
-                'Type': 'Лид',
-                'Group':self.getGroup(id=data[0]['ASSIGNED_BY_ID'])}
+                'Ответственный': self.getManager(data[0]['ASSIGNED_BY_ID']),
+                'Источник': self.getSource(data[0]['UF_CRM_1597759307071'],entity='lead'),
+                'Имя клиента': data[0]['NAME'],
+                'Фамилия клиента': data[0]['LAST_NAME'],
+                'Отчество клиента': data[0]['SECOND_NAME'],
+                'Тип сущности': 'Лид',
+                'Группа':self.getGroup(id=data[0]['ASSIGNED_BY_ID'])}
 
     def getDeal(self, data):
         """ Получаем сделку """
@@ -50,15 +50,15 @@ class GetClientClass:
                     data.remove(deal)
         contact = self.getContact(data[0]['CONTACT_ID'])
         return {'ID': data[0]['ID'],
-                'ASSIGNED_BY_ID': self.getManager(data[0]['ASSIGNED_BY_ID']),
-                'Date':data[0]['UF_CRM_62DAB2BE1B9C0'][:-15] if data[0]['UF_CRM_62DAB2BE1B9C0'] else 'Нет',
-                'Number':data[0]['UF_CRM_6059A855ED8BE'] if data[0]['UF_CRM_6059A855ED8BE'] else 'Нет',
-                'Source': self.getSource(id=data[0]['UF_CRM_5F3BE0484AC8C'],entity='deal'),
-                'Name':contact['NAME'],
-                'Last_Name':contact['LAST_NAME'],
-                'Second_name':contact['SECOND_NAME'],
-                'Type': 'Сделка',
-                'Group': self.getGroup(data[0]['ASSIGNED_BY_ID'])}
+                'Ответственный': self.getManager(data[0]['ASSIGNED_BY_ID']),
+                'Дата заключения договора':data[0]['UF_CRM_62DAB2BE1B9C0'][:-15] if data[0]['UF_CRM_62DAB2BE1B9C0'] else 'Нет',
+                'Номер дела':data[0]['UF_CRM_6059A855ED8BE'] if data[0]['UF_CRM_6059A855ED8BE'] else 'Нет',
+                'Источник': self.getSource(id=data[0]['UF_CRM_5F3BE0484AC8C'],entity='deal'),
+                'Имя клиента':contact['NAME'],
+                'Фамилия клиента':contact['LAST_NAME'],
+                'Отчество клиента':contact['SECOND_NAME'],
+                'Тип': 'Сделка',
+                'Группа': self.getGroup(data[0]['ASSIGNED_BY_ID'])}
 
 
     def getContact(self, id):
