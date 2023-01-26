@@ -10,3 +10,7 @@ class Bitrix24Data:
 class Bitrix24DataTgBot:
     WEBHOOK = "https://novoedelo.bitrix24.ru/rest/16/hyxr1ri1iil9gk66/"
     B = Bitrix24(WEBHOOK)
+
+class Bitrix24DataTgInfoBot:
+    WEBHOOK = "https://novoedelo.bitrix24.ru/rest/16/gjcab40r26ej26ag/"
+    B = Bitrix24(WEBHOOK)

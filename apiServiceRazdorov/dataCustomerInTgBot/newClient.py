@@ -2,6 +2,7 @@ import pprint
 from bitrixTask.classBitrix import Bitrix24DataTgBot as Bitrix24Data
 from .currentСlient import CurrentClient
 import time
+import datetime
 
 
 class AddNewClient:
@@ -72,7 +73,8 @@ class AddNewClient:
             "UF_CRM_1673599207": self.chatId,
             "ASSIGNED_BY_ID" : self.idManager,
             "NAME": self.first_name,
-            "LAST_NAME" : self.last_name
+            "LAST_NAME" : self.last_name,
+            "UF_CRM_1674131222": datetime.datetime.now()
         })
         return True
 
