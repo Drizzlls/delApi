@@ -22,6 +22,8 @@ class CurrentClient:
         """ Получаем Рабочий Telegram канал сотрудника """
         for user in self.allUsersData:
             if int(user['ID']) == self.idManager:
+                if user['UF_USR_1672311069106'] is None:
+                    return self.getLinkTelegramSubdivision()
                 return user['UF_USR_1672311069106']
         return self.getLinkTelegramSubdivision()
 
@@ -59,6 +61,4 @@ class CurrentClient:
             if link['UF_USR_1672311069106']:
                 allLink.append(link['UF_USR_1672311069106'])
         return allLink[randint(0,len(allLink)-1)]
-
-
 
