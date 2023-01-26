@@ -28,7 +28,8 @@ class NewClient(APIView):
                             chatId=request.data['chatId'],
                             idGroup=request.data['idGroup'],
                             last_name=request.data["last_name"],
-                            first_name=request.data["first_name"])
+                            first_name=request.data["first_name"],
+                            utm=request.data['utm'])
         data()
         return Response(data.link)
 

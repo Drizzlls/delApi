@@ -6,7 +6,7 @@ import datetime
 
 
 class AddNewClient:
-    def __init__(self, nickname, chatId, phone, idGroup, last_name, first_name):
+    def __init__(self, nickname, chatId, phone, idGroup, last_name, first_name, utm):
         self.nickname = nickname
         self.chatId = chatId
         self.phone = phone
@@ -16,6 +16,7 @@ class AddNewClient:
         self.idManager = ''
         self.last_name = last_name
         self.first_name = first_name
+        self.utm = utm
 
     def findNickname(self):
         """ Осуществляем поиск по никнейму """
@@ -74,7 +75,8 @@ class AddNewClient:
             "ASSIGNED_BY_ID" : self.idManager,
             "NAME": self.first_name,
             "LAST_NAME" : self.last_name,
-            "UF_CRM_1674131222": datetime.datetime.now()
+            "UF_CRM_1674131222": datetime.datetime.now(),
+            "UTM_SOURCE": self.utm,
         })
         return True
 
